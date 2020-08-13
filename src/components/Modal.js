@@ -1,6 +1,8 @@
  // frontend/src/components/Modal.js
 
  import React, { Component } from "react";
+ import DateTimePicker from 'react-datetime-picker';
+ 
  import {
    Button,
    Modal,

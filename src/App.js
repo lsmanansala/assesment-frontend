@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
+import moment from 'moment'
 import axios from "axios";
-
+import {
+  FormGroup,
+  Input,
+  Label
+} from "reactstrap";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -14,12 +19,19 @@ class App extends Component {
         end_date:"",
         completed: false
       },
+      from_date: "",
+      to_date: "",
       appList: []
     };
   }
   componentDidMount() {
     this.refreshList();
   }
+  handleChange = e => {
+    let { name, value } = e.target;
+    this.setState({ name: value });
+    console.log(this.state)
+  };
   refreshList = () => {
     axios
       .get("http://localhost:8000/api/appointments/")
@@ -66,7 +78,16 @@ class App extends Component {
           }`}
           title={item.comment}
         >
-          {item.patient} starts at {item.start_date} then ends at {item.end_date}
+          <h4>
+            {item.patient}
+          </h4> 
+          <div>
+            <div>From:</div> {moment(item.start_date).format('MMMM Do YYYY, h:mm:ss a')} 
+          </div>
+          <div>
+            <div>To:</div>  {moment(item.end_date).format('MMMM Do YYYY, h:mm:ss a')} 
+          </div>
+
         </span>
         <span>
           <button
@@ -126,6 +147,23 @@ class App extends Component {
                 <button onClick={this.createItem} className="btn btn-primary">
                   Add Appointment
                 </button>
+
+                <FormGroup>
+                  <Label for="start_date">Start Date</Label>
+                  <Input
+                    type="datetime-local"
+                    name="from_date"
+                    value={this.state.from_date}
+                    onChange={this.handleChange}
+                  />
+                  <Label for="end_date">End Date</Label>
+                  <Input
+                    type="datetime-local"
+                    name="to_date"
+                    value={this.state.to_date}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
               </div>
               {this.renderTabList()}
               <ul className="list-group list-group-flush">
