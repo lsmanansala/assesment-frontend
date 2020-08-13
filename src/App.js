@@ -66,7 +66,7 @@ class App extends Component {
           }`}
           title={item.comment}
         >
-          {item.patient}
+          {item.patient} starts at {item.start_date} then ends at {item.end_date}
         </span>
         <span>
           <button
