@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
-//import moment from 'moment'
 import moment from 'moment-timezone'
 import axios from "axios";
-import {
-  FormGroup,
-  Input,
-  Label
-} from "reactstrap";
+import "flatpickr/dist/themes/material_green.css" 
+import Flatpickr from "react-flatpickr"
+import Swal from 'sweetalert2'
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -20,6 +18,11 @@ class App extends Component {
         end_date:"",
         completed: false
       },
+      options: {
+        mode: "range",
+       },
+       startDate: null,
+       endDate: null,
       from_date: "",
       to_date: "",
       appList: []
@@ -65,9 +68,16 @@ class App extends Component {
   };
   renderItems = () => {
     const { viewCompleted } = this.state;
-    const newItems = this.state.appList.filter(
+    let newItems = this.state.appList.filter(
       item => item.completed === viewCompleted
-    );
+      && item.start_date >= this.state.startDate 
+      && item.start_date <= this.state.endDate
+    )
+    newItems = this.state.appList.filter(
+      item => item.start_date >= this.state.startDate 
+      && item.start_date <= moment(this.state.endDate).add(1, 'd').format()
+    )
+    
     return newItems.map(item => (
       <li
         key={item.id}
@@ -122,7 +132,19 @@ class App extends Component {
     }
     axios
       .post("http://localhost:8000/api/appointments/", item)
-      .then(res => this.refreshList())
+      // .then(res => this.refreshList())
+      .then(res => {
+        if (res.data.error){
+          Swal.fire({
+            title: 'Error!',
+            text: res.data.error,
+            icon: 'error',
+            confirmButtonText: 'Cool'
+          })
+        } else {
+          this.refreshList()
+        }
+      })
       .catch(err => console.log(err));
   };
   handleDelete = item => {
@@ -137,6 +159,13 @@ class App extends Component {
   editItem = item => {
     this.setState({ activeItem: item, modal: !this.state.modal });
   };
+
+  setdateRange = e => {
+    let startDate = moment(e[0]).format()
+    let endDate = moment(e[1]).format()
+ 
+    this.setState({ startDate, endDate })
+   }
   render() {
     return (
       <main className="content">
@@ -148,6 +177,16 @@ class App extends Component {
                 <button onClick={this.createItem} className="btn btn-primary">
                   Add Appointment
                 </button>
+              </div>
+              <div style={{position: "absolute",
+                          top: "17px",
+                          right: "10px"}}>
+                <Flatpickr
+                  placeholder="Select Dates"
+                  options={this.state.options}
+                  value={this.state.dateRange}
+                  onClose={this.setdateRange}
+                />
               </div>
               {this.renderTabList()}
               <ul className="list-group list-group-flush">

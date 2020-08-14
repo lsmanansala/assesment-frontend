@@ -18,9 +18,12 @@
     "react-datetime-bootstrap": "^1.4.7",
     "react-datetime-picker": "^3.0.2",
     "react-dom": "^16.13.1",
+    "react-flatpickr": "^3.10.5",
     "react-moment": "^0.9.7",
     "react-scripts": "3.4.3",
-    "reactstrap": "^8.5.1"
+    "reactstrap": "^8.5.1",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^9.17.1"
   },
   "scripts": {
     "start": "react-scripts start",
