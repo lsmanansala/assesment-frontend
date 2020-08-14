@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
-import moment from 'moment'
+//import moment from 'moment'
+import moment from 'moment-timezone'
 import axios from "axios";
 import {
   FormGroup,
@@ -82,10 +83,10 @@ class App extends Component {
             {item.patient}
           </h4> 
           <div>
-            <div>From:</div> {moment(item.start_date).format('MMMM Do YYYY, h:mm:ss a')} 
+            <div>From:</div> {moment(item.start_date).tz('Asia/Shanghai').format('MMMM Do YYYY, h:mm:ss a')} 
           </div>
           <div>
-            <div>To:</div>  {moment(item.end_date).format('MMMM Do YYYY, h:mm:ss a')} 
+            <div>To:</div>  {moment(item.end_date).tz('Asia/Shanghai').format('MMMM Do YYYY, h:mm:ss a')} 
           </div>
 
         </span>
@@ -147,23 +148,6 @@ class App extends Component {
                 <button onClick={this.createItem} className="btn btn-primary">
                   Add Appointment
                 </button>
-
-                <FormGroup>
-                  <Label for="start_date">Start Date</Label>
-                  <Input
-                    type="datetime-local"
-                    name="from_date"
-                    value={this.state.from_date}
-                    onChange={this.handleChange}
-                  />
-                  <Label for="end_date">End Date</Label>
-                  <Input
-                    type="datetime-local"
-                    name="to_date"
-                    value={this.state.to_date}
-                    onChange={this.handleChange}
-                  />
-                </FormGroup>
               </div>
               {this.renderTabList()}
               <ul className="list-group list-group-flush">
